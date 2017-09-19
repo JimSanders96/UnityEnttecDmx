@@ -20,8 +20,11 @@ public class DmxController : MonoBehaviour
 
     private void Awake()
     {
+
         ShowtecLLB8.Init();
         dmxSignalIntervalSeconds = regularIntervalSeconds;
+        AllBlue(0);
+        AllRed(1);
     }
 
     private void Update()
@@ -41,6 +44,8 @@ public class DmxController : MonoBehaviour
     private void ResetCounter()
     {
         count -= dmxSignalIntervalSeconds;
+        if (count < 0)
+            count = 0;
     }
 
     public void ToggleStrobe()
@@ -71,26 +76,29 @@ public class DmxController : MonoBehaviour
         ShowtecLLB8.SetStroboscope(value, true);
     }
 
-    public void AllBlue()
+
+
+    public void AllBlue(int ledbarIndex = 0)
     {
-        ShowtecLLB8.SetAllSingleColor(ShowtecLLB8.RGB.BLUE, 255, false);
-        ShowtecLLB8.SetMasterFader(255, true);
+        ShowtecLLB8.SetAllSingleColor(ShowtecLLB8.RGB.BLUE, 255, false, ledbarIndex);
+        ShowtecLLB8.SetMasterFader(255, true, ledbarIndex);
         ResetCounter();
     }
 
-    public void AllRed()
+    public void AllRed(int ledbarIndex = 0)
     {
-        ShowtecLLB8.SetAllSingleColor(ShowtecLLB8.RGB.RED, 255, false);
-        ShowtecLLB8.SetMasterFader(255, true);
+        ShowtecLLB8.SetAllSingleColor(ShowtecLLB8.RGB.RED, 255, false, ledbarIndex);
+        ShowtecLLB8.SetMasterFader(255, true, ledbarIndex);
         ResetCounter();
     }
 
-    public void AllGreen()
+    public void AllGreen(int ledbarIndex = 0)
     {
-        ShowtecLLB8.SetAllSingleColor(ShowtecLLB8.RGB.GREEN, 255, false);
-        ShowtecLLB8.SetMasterFader(255, true);
+        ShowtecLLB8.SetAllSingleColor(ShowtecLLB8.RGB.GREEN, 255, false, ledbarIndex);
+        ShowtecLLB8.SetMasterFader(255, true, ledbarIndex);
         ResetCounter();
     }
+
     #endregion
 
 }
