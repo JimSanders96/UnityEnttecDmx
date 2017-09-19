@@ -6,14 +6,17 @@ using Showtec;
 public class DmxController : MonoBehaviour
 {
     public bool active = false;
-    [Range(0,255)]
+    [Range(0, 255)]
     public int strobeVal = 210;
+    public bool masterFaderControlActive = false;
+    [Range(0, 255)]
+    public int masterFaderVal = 255;
 
     private float dmxSignalIntervalSeconds = 0;
     private float count;
-    private float regularIntervalSeconds = 0.25f;
+    private float regularIntervalSeconds = 0.05f;
     private bool strobeActive = false;
-    private float strobeIntervalSeconds = 0.1f;
+    private float strobeIntervalSeconds = 0.05f;
 
     private void Awake()
     {
@@ -27,7 +30,11 @@ public class DmxController : MonoBehaviour
         if (count >= dmxSignalIntervalSeconds && active)
         {
             ResetCounter();
-            ShowtecLLB8.SendData();
+
+            if (masterFaderControlActive)
+                SetMasterFader((byte)masterFaderVal);
+            else
+                ShowtecLLB8.SendData();
         }
     }
 
