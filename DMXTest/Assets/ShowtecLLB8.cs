@@ -43,9 +43,21 @@ namespace Showtec
         {
             RED,
             GREEN,
-            BLUE           
+            BLUE
         }
-#endregion
+        #endregion
+
+        #region Utility
+        public static void Init()
+        {
+            OpenDMX.start();
+            SetAllOff(true);
+        }
+
+        public static void SendData()
+        {
+            OpenDMX.writeData();
+        }
 
         public static int ChannelCount()
         {
@@ -95,42 +107,54 @@ namespace Showtec
                     channels.Add(GetChannel(SECTIONS_P4.BLUE7));
                     channels.Add(GetChannel(SECTIONS_P4.BLUE8));
                     break;
-            }            
+            }
 
             return channels;
         }
+        #endregion
 
-        /// <summary>
-        /// Sets the DMX data so that all sections of the given color get the given value.
-        /// </summary>
-        /// <param name="color"></param>
-        /// <param name="value"></param>
-        public static void AllSingleColor(ShowtecLLB8.RGB color, byte value, byte master)
+        #region Functionality
+        public static void SetMasterFader(byte value, bool writeImmediately)
         {
-            List<int> redChannels = ShowtecLLB8.GetAllColorChannels(color);
+            OpenDMX.setDmxValue(GetChannel(SECTIONS_P4.MASTER), value);
+            if (writeImmediately)
+                OpenDMX.writeData();
+        }
 
-            for (int i = 1; i < ShowtecLLB8.ChannelCount() + 1; i++)
+        public static void SetStroboscope(byte value, bool writeImmediately)
+        {
+            OpenDMX.setDmxValue(GetChannel(SECTIONS_P4.STROBE), value);
+            if (writeImmediately)
+                OpenDMX.writeData();
+        }
+
+        public static void SetAllSingleColor(RGB color, byte value, bool writeImmediately)
+        {
+            List<int> channels = GetAllColorChannels(color);
+
+            for (int i = 1; i < ChannelCount() + 1; i++)
             {
-                if (redChannels.Contains(i))
+                if (channels.Contains(i))
                     OpenDMX.setDmxValue(i, value);
-                else if (i == ShowtecLLB8.GetChannel(ShowtecLLB8.SECTIONS_P4.MASTER))
-                    OpenDMX.setDmxValue(i, master);
+                else if (i == GetChannel(SECTIONS_P4.STROBE) || i == GetChannel(SECTIONS_P4.MASTER))
+                    continue;
                 else
                     OpenDMX.setDmxValue(i, 0);
             }
-
-            OpenDMX.writeData();
+            if (writeImmediately)
+                OpenDMX.writeData();
         }
 
-        public static void AllOff()
+        public static void SetAllOff(bool writeImmediately)
         {
             for (int i = 0; i < 26; i++)
             {
                 OpenDMX.setDmxValue(i, 0);
             }
-            OpenDMX.writeData();
+            if (writeImmediately)
+                OpenDMX.writeData();
         }
-
+        #endregion
     }
 
     public class OpenDMX
@@ -192,11 +216,6 @@ namespace Showtec
             Thread thread = new Thread(new ThreadStart(writeData));
             writeThread = thread;
             thread.Start();
-        }
-
-        public static void stop()
-        {
-            
         }
 
         public static void setDmxValue(int channel, byte value)

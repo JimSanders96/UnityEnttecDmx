@@ -78,7 +78,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Dmx.cs" />
+    <Compile Include="Assets\DmxController.cs" />
     <Compile Include="Assets\ShowtecLLB8.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
