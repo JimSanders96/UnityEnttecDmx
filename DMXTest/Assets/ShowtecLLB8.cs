@@ -173,7 +173,7 @@ namespace Showtec
             List<int> channels = GetAllColorChannels(color, ledbarIndex);
 
             // Channels start at 1.
-            for (int i = (ChannelCount() * ledbarIndex) + 1; i < ChannelCount() + 1 + (ledbarIndex * ChannelCount()); i++)
+            for (int i = 1 + (ChannelCount() * ledbarIndex); i < 1 + ChannelCount() + (ledbarIndex * ChannelCount()); i++)
             {
                 if (channels.Contains(i))
                     OpenDMX.setDmxValue(i, value);

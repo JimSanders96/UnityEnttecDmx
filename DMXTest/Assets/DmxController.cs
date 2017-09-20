@@ -23,8 +23,19 @@ public class DmxController : MonoBehaviour
 
         ShowtecLLB8.Init();
         dmxSignalIntervalSeconds = regularIntervalSeconds;
-        AllBlue(0);
-        AllRed(1);
+        AllRed(0);
+        AllBlue(1);
+
+        /*
+        string debugString = "";
+        List<int> channels = ShowtecLLB8.GetAllColorChannels(ShowtecLLB8.RGB.RED, 1);
+        foreach(int c in channels)
+        {
+            debugString += c + ", ";
+        }
+        Debug.Log(debugString);
+        */
+
     }
 
     private void Update()
@@ -61,19 +72,19 @@ public class DmxController : MonoBehaviour
         ResetCounter();
     }
 
-    public void SetMasterFader(byte value)
+    public void SetMasterFader(byte value, int ledbarIndex = 0)
     {
         ResetCounter();
-        ShowtecLLB8.SetMasterFader(value, true);
+        ShowtecLLB8.SetMasterFader(value, true, ledbarIndex);
     }
 
-    public void SetStroboscope(bool active)
+    public void SetStroboscope(bool active, int ledbarIndex = 0)
     {
         dmxSignalIntervalSeconds = active ? strobeIntervalSeconds : regularIntervalSeconds;
         ResetCounter();
 
         byte value = active ? (byte)strobeVal : (byte)0;
-        ShowtecLLB8.SetStroboscope(value, true);
+        ShowtecLLB8.SetStroboscope(value, true, ledbarIndex);
     }
 
 
